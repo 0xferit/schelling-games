@@ -66,7 +66,6 @@ interface ConnectionState {
   previousOpponents: Set<string>;
   lastActivityAt: number;
   livenessTimer: ReturnType<typeof setInterval> | null;
-  clientBuild: string | null;
 }
 
 // UX hint against accidentally stale client bundles — NOT an auth boundary.
@@ -241,6 +240,8 @@ export class GameRoom {
   // Quick lookup: accountId -> matchId
   playerMatchIndex: Map<string, string>;
 
+  buildGateDisabledWarned: boolean;
+
   constructor(state: DurableObjectState, env: Env) {
     this.state = state;
     this.env = env;
@@ -251,6 +252,7 @@ export class GameRoom {
     this.formingMatch = null;
     this.activeMatches = new Map();
     this.playerMatchIndex = new Map();
+    this.buildGateDisabledWarned = false;
 
     initCheckpointTables(this.state.storage.sql);
     this._restoreMatchesFromStorage();
@@ -374,7 +376,6 @@ export class GameRoom {
             previousOpponents: new Set(),
             lastActivityAt: Date.now(),
             livenessTimer: null,
-            clientBuild: null,
           });
           if (playerState.graceTimer) {
             clearTimeout(playerState.graceTimer);
@@ -415,18 +416,25 @@ export class GameRoom {
     // reconnects above are grandfathered (all players in a live match share a
     // build). Fresh queue joins and queue/forming reconnects must match the
     // deployed build so they cannot mix message shapes with newer clients.
-    const clientBuildValid =
-      typeof clientBuild === 'string' && CLIENT_BUILD_HASH_RE.test(clientBuild);
-    if (
-      this.env.BUILD_HASH &&
-      (!clientBuildValid || clientBuild !== this.env.BUILD_HASH)
-    ) {
-      try {
-        ws.close(4001, 'client build mismatch');
-      } catch {}
-      return;
+    if (this.env.BUILD_HASH) {
+      const clientBuildValid =
+        typeof clientBuild === 'string' &&
+        CLIENT_BUILD_HASH_RE.test(clientBuild);
+      if (!clientBuildValid || clientBuild !== this.env.BUILD_HASH) {
+        try {
+          ws.close(4001, 'client build mismatch');
+        } catch {}
+        return;
+      }
+    } else if (!this.buildGateDisabledWarned) {
+      // Fails open by design: rejecting everyone on a missing var would take
+      // queueing down entirely. Expected unset only under `wrangler dev`.
+      this.buildGateDisabledWarned = true;
+      console.warn(
+        'BUILD_HASH is unset: client build admission gate is disabled. ' +
+          'Deploys must pass --var BUILD_HASH:<git short sha>.',
+      );
     }
-    const acceptedClientBuild = clientBuildValid ? clientBuild : null;
 
     const inFormingMatch =
       this.formingMatch?.players.includes(accountId) ?? false;
@@ -440,7 +448,6 @@ export class GameRoom {
       this._clearConnectionLivenessMonitor(accountId);
       existingConn.ws = ws;
       existingConn.displayName = displayName;
-      existingConn.clientBuild = acceptedClientBuild;
       if (!inFormingMatch) {
         existingConn.startNow = false;
       }
@@ -474,7 +481,6 @@ export class GameRoom {
         : new Set(),
       lastActivityAt: Date.now(),
       livenessTimer: null,
-      clientBuild: acceptedClientBuild,
     });
 
     this._setupWsListeners(ws, accountId);

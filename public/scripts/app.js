@@ -849,7 +849,10 @@ function showTerminalClose(message) {
     const host = document.getElementById('notif');
     if (!host) return;
     const existing = host.querySelector('.notif-item.terminal');
-    if (existing) return;
+    if (existing) {
+      existing.textContent = message;
+      return;
+    }
     const el = document.createElement('div');
     el.className = 'notif-item error terminal';
     el.textContent = message;
