@@ -201,7 +201,7 @@ export function handleGameConfig(_request: Request, env: Env): Response {
     commitDuration: COMMIT_DURATION,
     revealDuration: REVEAL_DURATION,
     turnstileSiteKey: getConfiguredTurnstileSiteKey(env),
-    build: env.BUILD_HASH ?? null,
+    build: env.BUILD_HASH?.trim() || null,
   });
 }
 

@@ -416,11 +416,12 @@ export class GameRoom {
     // reconnects above are grandfathered (all players in a live match share a
     // build). Fresh queue joins and queue/forming reconnects must match the
     // deployed build so they cannot mix message shapes with newer clients.
-    if (this.env.BUILD_HASH) {
+    const buildHash = this.env.BUILD_HASH?.trim();
+    if (buildHash) {
       const clientBuildValid =
         typeof clientBuild === 'string' &&
         CLIENT_BUILD_HASH_RE.test(clientBuild);
-      if (!clientBuildValid || clientBuild !== this.env.BUILD_HASH) {
+      if (!clientBuildValid || clientBuild !== buildHash) {
         try {
           ws.close(4001, 'client build mismatch');
         } catch {}

@@ -403,6 +403,17 @@ describe('GameRoom Durable Object', () => {
       const closed = await waitForClose(ws, 3000);
       expect(closed.code).toBe(4001);
     });
+
+    it('admits a matching client when BUILD_HASH carries stray whitespace', async () => {
+      buildEnv.BUILD_HASH = ` ${CURRENT_BUILD}\n`;
+      const wallet = createTestWallet(26);
+      const { accountId, cookie } = await createTestSession(wallet);
+      await seedAccount(env.DB, accountId, 'TrimmedBuildPlayer');
+      const ws = await openWs(cookie, CURRENT_BUILD);
+      const queueMsg = await waitForMessage(ws, 'queue_state', 3000);
+      expect(queueMsg.type).toBe('queue_state');
+      ws.close();
+    });
   });
 
   it('skips build-mismatch check when env.BUILD_HASH is unset', async () => {

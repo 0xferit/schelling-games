@@ -764,6 +764,10 @@ let wsHeartbeatSocket = null;
 let wsAwaitingPong = false;
 let wsReconnectPaused = false;
 let wsQueueRecoveryPending = false;
+// Latched on a 4001 close; only a page refresh (script re-eval) clears it.
+let buildMismatchTerminal = false;
+const STALE_BUILD_REFRESH_MESSAGE =
+  'A new version is available. Refresh this page to continue.';
 
 function clearWebSocketRetryTimer() {
   if (wsRetryTimer !== null) {
@@ -941,6 +945,10 @@ function refreshLiveWebSocketIdentity() {
 }
 
 function queueQueueAction(action) {
+  if (buildMismatchTerminal) {
+    showTerminalClose(STALE_BUILD_REFRESH_MESSAGE);
+    return;
+  }
   const isNewAction = S.pendingQueueAction !== action;
   S.pendingQueueAction = action;
   renderQueue();
@@ -969,6 +977,7 @@ function flushPendingQueueAction() {
 }
 
 function connectWebSocket() {
+  if (buildMismatchTerminal) return;
   if (!S.accountId) return;
   wsReconnectPaused = false;
   wsRetryTimer = null;
@@ -1016,13 +1025,12 @@ function connectWebSocket() {
       return;
     }
     if (isBuildMismatchClose(evt)) {
+      buildMismatchTerminal = true;
       intentionalClose = true;
       wsQueueRecoveryPending = false;
       S.pendingQueueAction = null;
       clearWebSocketRetryTimer();
-      showTerminalClose(
-        'A new version is available. Refresh this page to continue.',
-      );
+      showTerminalClose(STALE_BUILD_REFRESH_MESSAGE);
       renderQueue();
       return;
     }
