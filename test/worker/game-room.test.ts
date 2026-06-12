@@ -199,9 +199,15 @@ function waitForMessageWhere(
   });
 }
 
-async function openWs(cookie: string): Promise<WebSocket> {
+async function openWs(
+  cookie: string,
+  clientBuild?: string,
+): Promise<WebSocket> {
+  const url = clientBuild
+    ? `${BASE}/ws?clientBuild=${encodeURIComponent(clientBuild)}`
+    : `${BASE}/ws`;
   const resp = await exports.default.fetch(
-    new Request(`${BASE}/ws`, {
+    new Request(url, {
       headers: {
         Upgrade: 'websocket',
         Cookie: `session=${cookie}`,
@@ -339,6 +345,107 @@ describe('GameRoom Durable Object', () => {
       }),
     );
     expect(resp.status).toBe(401);
+  });
+
+  describe('client build admission', () => {
+    const buildEnv = env as unknown as { BUILD_HASH?: string };
+    const CURRENT_BUILD = 'deadbee';
+    let previousBuildHash: string | undefined;
+
+    beforeEach(() => {
+      previousBuildHash = buildEnv.BUILD_HASH;
+      buildEnv.BUILD_HASH = CURRENT_BUILD;
+    });
+
+    afterEach(() => {
+      if (previousBuildHash === undefined) {
+        delete buildEnv.BUILD_HASH;
+      } else {
+        buildEnv.BUILD_HASH = previousBuildHash;
+      }
+    });
+
+    it('admits a client whose build matches the deployed build', async () => {
+      const wallet = createTestWallet(20);
+      const { accountId, cookie } = await createTestSession(wallet);
+      await seedAccount(env.DB, accountId, 'MatchingBuildPlayer');
+      const ws = await openWs(cookie, CURRENT_BUILD);
+      const queueMsg = await waitForMessage(ws, 'queue_state', 3000);
+      expect(queueMsg.type).toBe('queue_state');
+      ws.close();
+    });
+
+    it('closes a client with a mismatched build (code 4001)', async () => {
+      const wallet = createTestWallet(21);
+      const { accountId, cookie } = await createTestSession(wallet);
+      await seedAccount(env.DB, accountId, 'StalePlayer');
+      const ws = await openWs(cookie, 'abc1234');
+      const closed = await waitForClose(ws, 3000);
+      expect(closed.code).toBe(4001);
+      expect(closed.reason).toBe('client build mismatch');
+    });
+
+    it('closes a client with a malformed build (code 4001)', async () => {
+      const wallet = createTestWallet(22);
+      const { accountId, cookie } = await createTestSession(wallet);
+      await seedAccount(env.DB, accountId, 'MalformedPlayer');
+      const ws = await openWs(cookie, 'not-a-hex-sha!!');
+      const closed = await waitForClose(ws, 3000);
+      expect(closed.code).toBe(4001);
+      expect(closed.reason).toBe('client build mismatch');
+    });
+
+    it('closes a client when BUILD_HASH is set but no clientBuild is sent', async () => {
+      const wallet = createTestWallet(23);
+      const { accountId, cookie } = await createTestSession(wallet);
+      await seedAccount(env.DB, accountId, 'NoBuildPlayer');
+      const ws = await openWs(cookie);
+      const closed = await waitForClose(ws, 3000);
+      expect(closed.code).toBe(4001);
+    });
+
+    it('admits a matching client when BUILD_HASH carries stray whitespace', async () => {
+      buildEnv.BUILD_HASH = ` ${CURRENT_BUILD}\n`;
+      const wallet = createTestWallet(26);
+      const { accountId, cookie } = await createTestSession(wallet);
+      await seedAccount(env.DB, accountId, 'TrimmedBuildPlayer');
+      const ws = await openWs(cookie, CURRENT_BUILD);
+      const queueMsg = await waitForMessage(ws, 'queue_state', 3000);
+      expect(queueMsg.type).toBe('queue_state');
+      ws.close();
+    });
+
+    it('fails open when BUILD_HASH is not a git sha', async () => {
+      buildEnv.BUILD_HASH = 'not-a-sha';
+      const wallet = createTestWallet(27);
+      const { accountId, cookie } = await createTestSession(wallet);
+      await seedAccount(env.DB, accountId, 'TypoBuildPlayer');
+      const ws = await openWs(cookie, 'abc1234');
+      const queueMsg = await waitForMessage(ws, 'queue_state', 3000);
+      expect(queueMsg.type).toBe('queue_state');
+      ws.close();
+    });
+  });
+
+  it('skips build-mismatch check when env.BUILD_HASH is unset', async () => {
+    const buildEnv = env as unknown as { BUILD_HASH?: string };
+    const previous = buildEnv.BUILD_HASH;
+    delete buildEnv.BUILD_HASH;
+    try {
+      const wallet = createTestWallet(24);
+      const { accountId, cookie } = await createTestSession(wallet);
+      await seedAccount(env.DB, accountId, 'DevModePlayer');
+      const ws = await openWs(cookie, 'anything-goes');
+      const queueMsg = await waitForMessage(ws, 'queue_state', 3000);
+      expect(queueMsg.type).toBe('queue_state');
+      ws.close();
+    } finally {
+      if (previous === undefined) {
+        delete buildEnv.BUILD_HASH;
+      } else {
+        buildEnv.BUILD_HASH = previous;
+      }
+    }
   });
 
   it('WebSocket auto-provisions a missing account for a valid session', async () => {
@@ -825,6 +932,66 @@ describe('GameRoom Durable Object', () => {
     p1r.ws.close();
     p2.ws.close();
     p3.ws.close();
+  });
+
+  it('grandfathers mid-match reconnect with a stale client build', {
+    timeout: 55_000,
+  }, async () => {
+    const buildEnv = env as unknown as { BUILD_HASH?: string };
+    const previousBuildHash = buildEnv.BUILD_HASH;
+    delete buildEnv.BUILD_HASH;
+    try {
+      const p1 = await connectPlayer(25, 'GrandfatherP1');
+      const p2 = await connectPlayer(26, 'GrandfatherP2');
+      const p3 = await connectPlayer(27, 'GrandfatherP3');
+
+      const p1Started = waitForMessage(
+        p1.ws,
+        'match_started',
+        MATCH_START_TIMEOUT_MS,
+      );
+      const p2Started = waitForMessage(
+        p2.ws,
+        'match_started',
+        MATCH_START_TIMEOUT_MS,
+      );
+      const p3Started = waitForMessage(
+        p3.ws,
+        'match_started',
+        MATCH_START_TIMEOUT_MS,
+      );
+
+      await joinPlayersAndStartNow([p1, p2, p3]);
+
+      const [gs1] = await Promise.all([p1Started, p2Started, p3Started]);
+      const matchId = gs1.matchId;
+
+      // Simulate a deploy after the match started.
+      buildEnv.BUILD_HASH = 'beefca2';
+
+      // Reconnect player 1 with a stale build — should NOT get 4001 close;
+      // should replay match_started because active-match reconnect is grandfathered.
+      const wallet = createTestWallet(25);
+      const { cookie } = await createTestSession(wallet);
+      const p1r = await openWs(cookie, 'oldbuild');
+      const replayMatchStarted = await waitForMessage(
+        p1r,
+        'match_started',
+        3000,
+      );
+      expect(replayMatchStarted.matchId).toBe(matchId);
+
+      p1.ws.close();
+      p1r.close();
+      p2.ws.close();
+      p3.ws.close();
+    } finally {
+      if (previousBuildHash === undefined) {
+        delete buildEnv.BUILD_HASH;
+      } else {
+        buildEnv.BUILD_HASH = previousBuildHash;
+      }
+    }
   });
 
   it('reconnect replays player_disconnected for peers in grace period', {

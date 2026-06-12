@@ -27,4 +27,5 @@ export interface Env {
   OPEN_TEXT_NORMALIZER_TIMEOUT_MS?: string;
   TURNSTILE_SECRET_KEY?: string;
   TURNSTILE_SITE_KEY?: string;
+  BUILD_HASH?: string;
 }

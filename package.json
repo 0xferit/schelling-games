@@ -18,7 +18,7 @@
     "typecheck:worker": "tsc --noEmit -p tsconfig.worker.json",
     "stamp-build": "sed -i.bak -e \"s/__BUILD_HASH__/$(git rev-parse --short HEAD)/\" -e \"s/__BUILD_DATE__/$(date -u +%Y-%m-%dT%H:%MZ)/\" public/index.html public/app.html",
     "unstamp-build": "mv public/index.html.bak public/index.html && mv public/app.html.bak public/app.html",
-    "deploy": "sh -c 'set -e; wrangler_backup=$(mktemp); cp wrangler.toml \"$wrangler_backup\"; cleanup(){ npm run unstamp-build >/dev/null 2>&1 || true; if [ -f \"$wrangler_backup\" ]; then cp \"$wrangler_backup\" wrangler.toml; rm -f \"$wrangler_backup\"; fi; }; trap cleanup EXIT; npm run sync:ai-bot-pool; npm run stamp-build; CLOUDFLARE_API_TOKEN=${CLOUDFLARE_FERIT_API_TOKEN:-$CLOUDFLARE_API_TOKEN} npx wrangler deploy; trap - EXIT; cleanup'"
+    "deploy": "sh -c 'set -e; wrangler_backup=$(mktemp); cp wrangler.toml \"$wrangler_backup\"; cleanup(){ npm run unstamp-build >/dev/null 2>&1 || true; if [ -f \"$wrangler_backup\" ]; then cp \"$wrangler_backup\" wrangler.toml; rm -f \"$wrangler_backup\"; fi; }; trap cleanup EXIT; npm run sync:ai-bot-pool; npm run stamp-build; CLOUDFLARE_API_TOKEN=${CLOUDFLARE_FERIT_API_TOKEN:-$CLOUDFLARE_API_TOKEN} npx wrangler deploy --var \"BUILD_HASH:$(git rev-parse --short HEAD)\"; trap - EXIT; cleanup'"
   },
   "repository": {
     "type": "git",

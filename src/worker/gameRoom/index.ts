@@ -68,6 +68,12 @@ interface ConnectionState {
   livenessTimer: ReturnType<typeof setInterval> | null;
 }
 
+// UX hint against accidentally stale client bundles — NOT an auth boundary.
+// A tampered client can still forge this value; the ws protocol itself is open.
+// Validates both the deployed BUILD_HASH and the client-sent value: a
+// misconfigured server value disables the gate instead of rejecting everyone.
+const BUILD_HASH_RE = /^[a-f0-9]{7,40}$/;
+
 interface WorkerPlayerState extends PersistedPlayerState {
   ws: WebSocket | null;
   graceTimer: ReturnType<typeof setTimeout> | null;
@@ -236,6 +242,8 @@ export class GameRoom {
   // Quick lookup: accountId -> matchId
   playerMatchIndex: Map<string, string>;
 
+  buildGateDisabledWarned: boolean;
+
   constructor(state: DurableObjectState, env: Env) {
     this.state = state;
     this.env = env;
@@ -246,6 +254,7 @@ export class GameRoom {
     this.formingMatch = null;
     this.activeMatches = new Map();
     this.playerMatchIndex = new Map();
+    this.buildGateDisabledWarned = false;
 
     initCheckpointTables(this.state.storage.sql);
     this._restoreMatchesFromStorage();
@@ -269,6 +278,7 @@ export class GameRoom {
         url.searchParams.get('tokenBalance') || '0',
         10,
       );
+      const clientBuild = url.searchParams.get('clientBuild');
 
       if (!accountId || !displayName) {
         return new Response('Missing auth params', { status: 400 });
@@ -276,7 +286,13 @@ export class GameRoom {
 
       const pair = new WebSocketPair();
       const [client, server] = [pair[0], pair[1]];
-      this._handleWebSocket(server, accountId, displayName, tokenBalance);
+      this._handleWebSocket(
+        server,
+        accountId,
+        displayName,
+        tokenBalance,
+        clientBuild,
+      );
       return new Response(null, { status: 101, webSocket: client });
     }
 
@@ -292,6 +308,7 @@ export class GameRoom {
     accountId: string,
     displayName: string,
     _tokenBalance: number,
+    clientBuild: string | null,
   ): void {
     ws.accept();
 
@@ -395,6 +412,37 @@ export class GameRoom {
       if (!match || !playerState || playerState.forfeited) {
         this.playerMatchIndex.delete(accountId);
       }
+    }
+
+    // Build-mismatch guard at the queue/forming boundary. Active-match
+    // reconnects above are grandfathered (all players in a live match share a
+    // build). Fresh queue joins and queue/forming reconnects must match the
+    // deployed build so they cannot mix message shapes with newer clients.
+    const rawBuildHash = this.env.BUILD_HASH?.trim();
+    const buildHash =
+      rawBuildHash && BUILD_HASH_RE.test(rawBuildHash)
+        ? rawBuildHash
+        : undefined;
+    if (buildHash) {
+      const clientBuildValid =
+        typeof clientBuild === 'string' && BUILD_HASH_RE.test(clientBuild);
+      if (!clientBuildValid || clientBuild !== buildHash) {
+        try {
+          ws.close(4001, 'client build mismatch');
+        } catch {}
+        return;
+      }
+    } else if (!this.buildGateDisabledWarned) {
+      // Fails open by design: rejecting everyone on a missing or mistyped var
+      // would take queueing down entirely. Expected unset under `wrangler dev`.
+      this.buildGateDisabledWarned = true;
+      const reason = rawBuildHash
+        ? `BUILD_HASH ${JSON.stringify(rawBuildHash)} is not a git sha`
+        : 'BUILD_HASH is unset';
+      console.warn(
+        `${reason}: client build admission gate is disabled. ` +
+          'Deploys must pass --var BUILD_HASH:<git sha>.',
+      );
     }
 
     const inFormingMatch =

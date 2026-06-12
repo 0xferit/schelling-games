@@ -764,6 +764,10 @@ let wsHeartbeatSocket = null;
 let wsAwaitingPong = false;
 let wsReconnectPaused = false;
 let wsQueueRecoveryPending = false;
+// Latched on a 4001 close; only a page refresh (script re-eval) clears it.
+let buildMismatchTerminal = false;
+const STALE_BUILD_REFRESH_MESSAGE =
+  'A new version is available. Refresh this page to continue.';
 
 function clearWebSocketRetryTimer() {
   if (wsRetryTimer !== null) {
@@ -827,6 +831,37 @@ function scheduleWebSocketReconnect() {
 
 function isSocketReplacementClose(evt) {
   return evt && evt.code === 1000 && evt.reason === 'Replaced by new connection';
+}
+
+function isBuildMismatchClose(evt) {
+  return evt && evt.code === 4001;
+}
+
+function readStampedClientBuild() {
+  try {
+    const stamp = document.querySelector('.build-stamp');
+    const hash = stamp ? stamp.getAttribute('data-build-hash') : null;
+    if (!hash || hash === '__BUILD_HASH__') return null;
+    return /^[a-f0-9]{7,40}$/.test(hash) ? hash : null;
+  } catch (_) {
+    return null;
+  }
+}
+
+function showTerminalClose(message) {
+  try {
+    const host = document.getElementById('notif');
+    if (!host) return;
+    const existing = host.querySelector('.notif-item.terminal');
+    if (existing) {
+      existing.textContent = message;
+      return;
+    }
+    const el = document.createElement('div');
+    el.className = 'notif-item error terminal';
+    el.textContent = message;
+    host.appendChild(el);
+  } catch (_) {}
 }
 
 function stopWebSocketHeartbeat(targetSocket = null) {
@@ -910,6 +945,10 @@ function refreshLiveWebSocketIdentity() {
 }
 
 function queueQueueAction(action) {
+  if (buildMismatchTerminal) {
+    showTerminalClose(STALE_BUILD_REFRESH_MESSAGE);
+    return;
+  }
   const isNewAction = S.pendingQueueAction !== action;
   S.pendingQueueAction = action;
   renderQueue();
@@ -938,13 +977,18 @@ function flushPendingQueueAction() {
 }
 
 function connectWebSocket() {
+  if (buildMismatchTerminal) return;
   if (!S.accountId) return;
   wsReconnectPaused = false;
   wsRetryTimer = null;
   S.wsConnected = false;
   stopWebSocketHeartbeat();
   const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
-  S.ws = new WebSocket(`${proto}//${location.host}/ws`);
+  const clientBuild = readStampedClientBuild();
+  const wsUrl = clientBuild
+    ? `${proto}//${location.host}/ws?clientBuild=${encodeURIComponent(clientBuild)}`
+    : `${proto}//${location.host}/ws`;
+  S.ws = new WebSocket(wsUrl);
   const thisWs = S.ws;
   renderQueue();
   S.ws.onopen = () => {
@@ -975,7 +1019,19 @@ function connectWebSocket() {
     if (intentionalClose || thisWs !== S.ws) return;
     if (isSocketReplacementClose(evt)) {
       wsQueueRecoveryPending = false;
-      notify('This session became active in another tab or window.', 'warn');
+      showTerminalClose(
+        'This session became active in another tab or window.',
+      );
+      return;
+    }
+    if (isBuildMismatchClose(evt)) {
+      buildMismatchTerminal = true;
+      intentionalClose = true;
+      wsQueueRecoveryPending = false;
+      S.pendingQueueAction = null;
+      clearWebSocketRetryTimer();
+      showTerminalClose(STALE_BUILD_REFRESH_MESSAGE);
+      renderQueue();
       return;
     }
     wsQueueRecoveryPending =

@@ -44,6 +44,12 @@ export async function handleHttpRequest(
     doUrl.searchParams.set('accountId', accountId);
     doUrl.searchParams.set('displayName', displayName);
     doUrl.searchParams.set('tokenBalance', String(account.token_balance ?? 0));
+    const rawClientBuild = url.searchParams.get('clientBuild');
+    if (rawClientBuild && rawClientBuild.length <= 64) {
+      doUrl.searchParams.set('clientBuild', rawClientBuild);
+    } else {
+      doUrl.searchParams.delete('clientBuild');
+    }
     return stub.fetch(new Request(doUrl.toString(), request));
   }
 

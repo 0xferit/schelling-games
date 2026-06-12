@@ -740,10 +740,23 @@ describe('HTTP routes', () => {
       commitDuration: number;
       revealDuration: number;
       turnstileSiteKey: string | null;
+      build: string | null;
     };
     expect(data.commitDuration).toBeGreaterThan(0);
     expect(data.revealDuration).toBeGreaterThan(0);
     expect(data.turnstileSiteKey).toBe(TURNSTILE_SITE_KEY);
+    expect(data.build).toBeNull();
+  });
+
+  it('GET /api/game-config surfaces BUILD_HASH when set in env', async () => {
+    const envWithBuild = {
+      ...exampleVoteEnv,
+      BUILD_HASH: 'abc1234',
+    } satisfies Env;
+    const resp = await getWithEnv(envWithBuild, '/api/game-config');
+    expect(resp.status).toBe(200);
+    const data = (await resp.json()) as { build: string | null };
+    expect(data.build).toBe('abc1234');
   });
 
   it('POST /api/example-vote + GET /api/example-tally round-trips with a valid Turnstile token', async () => {

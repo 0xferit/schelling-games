@@ -246,7 +246,7 @@ jobs:
           PREVIEW_WORKER_NAME: ${{ steps.preview.outputs.worker_name }}
         run: |
           set -euo pipefail
-          deploy_output="$(npx wrangler deploy --config wrangler.preview.toml --secrets-file preview.secrets.env 2>&1 | tee /dev/stderr)"
+          deploy_output="$(npx wrangler deploy --config wrangler.preview.toml --secrets-file preview.secrets.env --var "BUILD_HASH:$(git rev-parse --short HEAD)" 2>&1 | tee /dev/stderr)"
           preview_url="$(printf '%s\n' "$deploy_output" | grep -Eo 'https://[^[:space:]]+' | grep 'workers.dev' | tail -n 1 || true)"
 
           if [ -z "$preview_url" ]; then
