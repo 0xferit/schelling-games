@@ -70,7 +70,9 @@ interface ConnectionState {
 
 // UX hint against accidentally stale client bundles — NOT an auth boundary.
 // A tampered client can still forge this value; the ws protocol itself is open.
-const CLIENT_BUILD_HASH_RE = /^[a-f0-9]{7,40}$/;
+// Validates both the deployed BUILD_HASH and the client-sent value: a
+// misconfigured server value disables the gate instead of rejecting everyone.
+const BUILD_HASH_RE = /^[a-f0-9]{7,40}$/;
 
 interface WorkerPlayerState extends PersistedPlayerState {
   ws: WebSocket | null;
@@ -416,11 +418,14 @@ export class GameRoom {
     // reconnects above are grandfathered (all players in a live match share a
     // build). Fresh queue joins and queue/forming reconnects must match the
     // deployed build so they cannot mix message shapes with newer clients.
-    const buildHash = this.env.BUILD_HASH?.trim();
+    const rawBuildHash = this.env.BUILD_HASH?.trim();
+    const buildHash =
+      rawBuildHash && BUILD_HASH_RE.test(rawBuildHash)
+        ? rawBuildHash
+        : undefined;
     if (buildHash) {
       const clientBuildValid =
-        typeof clientBuild === 'string' &&
-        CLIENT_BUILD_HASH_RE.test(clientBuild);
+        typeof clientBuild === 'string' && BUILD_HASH_RE.test(clientBuild);
       if (!clientBuildValid || clientBuild !== buildHash) {
         try {
           ws.close(4001, 'client build mismatch');
@@ -428,11 +433,14 @@ export class GameRoom {
         return;
       }
     } else if (!this.buildGateDisabledWarned) {
-      // Fails open by design: rejecting everyone on a missing var would take
-      // queueing down entirely. Expected unset only under `wrangler dev`.
+      // Fails open by design: rejecting everyone on a missing or mistyped var
+      // would take queueing down entirely. Expected unset under `wrangler dev`.
       this.buildGateDisabledWarned = true;
+      const reason = rawBuildHash
+        ? `BUILD_HASH ${JSON.stringify(rawBuildHash)} is not a git short sha`
+        : 'BUILD_HASH is unset';
       console.warn(
-        'BUILD_HASH is unset: client build admission gate is disabled. ' +
+        `${reason}: client build admission gate is disabled. ` +
           'Deploys must pass --var BUILD_HASH:<git short sha>.',
       );
     }

@@ -414,6 +414,17 @@ describe('GameRoom Durable Object', () => {
       expect(queueMsg.type).toBe('queue_state');
       ws.close();
     });
+
+    it('fails open when BUILD_HASH is not a git sha', async () => {
+      buildEnv.BUILD_HASH = 'not-a-sha';
+      const wallet = createTestWallet(27);
+      const { accountId, cookie } = await createTestSession(wallet);
+      await seedAccount(env.DB, accountId, 'TypoBuildPlayer');
+      const ws = await openWs(cookie, 'abc1234');
+      const queueMsg = await waitForMessage(ws, 'queue_state', 3000);
+      expect(queueMsg.type).toBe('queue_state');
+      ws.close();
+    });
   });
 
   it('skips build-mismatch check when env.BUILD_HASH is unset', async () => {
@@ -956,7 +967,7 @@ describe('GameRoom Durable Object', () => {
       const matchId = gs1.matchId;
 
       // Simulate a deploy after the match started.
-      buildEnv.BUILD_HASH = 'newbuild';
+      buildEnv.BUILD_HASH = 'beefca2';
 
       // Reconnect player 1 with a stale build — should NOT get 4001 close;
       // should replay match_started because active-match reconnect is grandfathered.
