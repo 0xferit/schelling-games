@@ -8,6 +8,10 @@ if (!baseUrl) {
 
 const base = new URL(baseUrl);
 
+// Mirrors BUILD_HASH_RE in src/worker/gameRoom/index.ts: a deployed build
+// value outside this shape disables the admission gate (it fails open).
+const BUILD_HASH_RE = /^[a-f0-9]{7,40}$/;
+
 function assert(condition, message) {
   if (!condition) {
     throw new Error(message);
@@ -108,8 +112,8 @@ async function waitForReady() {
         'game-config missing revealDuration',
       );
       assert(
-        typeof payload.build === 'string' && payload.build.length > 0,
-        'game-config missing build hash',
+        typeof payload.build === 'string' && BUILD_HASH_RE.test(payload.build),
+        'game-config build is not a git sha (admission gate would be disabled)',
       );
       return;
     } catch (error) {
@@ -190,8 +194,8 @@ await expectJson('/api/game-config', undefined, (payload) => {
   assert(payload.commitDuration === 60, 'unexpected commitDuration');
   assert(payload.revealDuration === 15, 'unexpected revealDuration');
   assert(
-    typeof payload.build === 'string' && payload.build.length > 0,
-    'game-config missing build hash',
+    typeof payload.build === 'string' && BUILD_HASH_RE.test(payload.build),
+    'game-config build is not a git sha (admission gate would be disabled)',
   );
 });
 

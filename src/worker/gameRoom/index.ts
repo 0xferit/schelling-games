@@ -437,11 +437,11 @@ export class GameRoom {
       // would take queueing down entirely. Expected unset under `wrangler dev`.
       this.buildGateDisabledWarned = true;
       const reason = rawBuildHash
-        ? `BUILD_HASH ${JSON.stringify(rawBuildHash)} is not a git short sha`
+        ? `BUILD_HASH ${JSON.stringify(rawBuildHash)} is not a git sha`
         : 'BUILD_HASH is unset';
       console.warn(
         `${reason}: client build admission gate is disabled. ` +
-          'Deploys must pass --var BUILD_HASH:<git short sha>.',
+          'Deploys must pass --var BUILD_HASH:<git sha>.',
       );
     }
 
