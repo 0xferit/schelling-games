@@ -5,37 +5,36 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 
 <!-- Primary SEO -->
-<title>Schelling Games — Coordination Theory Meets Crypto-Native Play</title>
+<title>Schelling Games - Coordination Theory Meets Crypto-Native Play</title>
 <meta name="description"
-  content="Can you predict what strangers will choose? Schelling Games is a commit-reveal coordination game inspired by Thomas Schelling's focal point theory. Play now — no install required."/>
+  content="Can you predict what strangers will choose? Schelling Games is a commit-reveal coordination game inspired by Thomas Schelling's focal point theory. Play now - no install required."/>
 <link rel="canonical" href="https://schelling.games/"/>
 <meta name="robots" content="index, follow"/>
 
 <!-- Open Graph -->
-<meta property="og:type"         content="website"/>
-<meta property="og:url"          content="https://schelling.games/"/>
-<meta property="og:title"        content="Schelling Games"/>
-<meta property="og:description"  content="A commit-reveal coordination game. Think like everyone else — and win."/>
-<meta property="og:locale"       content="en_US"/>
-<meta property="og:site_name"    content="Schelling Games"/>
+<meta property="og:type" content="website"/>
+<meta property="og:url" content="https://schelling.games/"/>
+<meta property="og:title" content="Schelling Games"/>
+<meta property="og:description" content="A commit-reveal coordination game. Think like everyone else - and win."/>
+<meta property="og:locale" content="en_US"/>
+<meta property="og:site_name" content="Schelling Games"/>
 
 <!-- Twitter / X Card -->
-<meta name="twitter:card"        content="summary_large_image"/>
-<meta name="twitter:site"        content="@0xferit"/>
-<meta name="twitter:title"       content="Schelling Games"/>
-<meta name="twitter:description" content="A commit-reveal coordination game. Think like everyone else — and win."/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:site" content="@0xferit"/>
+<meta name="twitter:title" content="Schelling Games"/>
+<meta name="twitter:description" content="A commit-reveal coordination game. Think like everyone else - and win."/>
 
 <!-- Favicon & PWA -->
-<link rel="icon"             type="image/svg+xml"  href="/favicon.svg"/>
-<link rel="manifest"                                href="/site.webmanifest"/>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+<link rel="manifest" href="/site.webmanifest"/>
 <meta name="theme-color" content="#0a0a0a"/>
 <meta name="color-scheme" content="dark"/>
 
 <!-- Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link rel="preload" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'"/>
-<noscript><link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/></noscript>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
 
 <!-- Structured Data -->
@@ -45,13 +44,13 @@
   "@type": "WebApplication",
   "name": "Schelling Games",
   "url": "https://schelling.games/",
-  "description": "A commit-reveal coordination game inspired by Thomas Schelling's focal point theory. Players simultaneously commit secret choices, then reveal — plurality wins.",
+  "description": "A commit-reveal coordination game inspired by Thomas Schelling's focal point theory. Players simultaneously commit secret choices, then reveal - plurality wins.",
   "applicationCategory": "GameApplication",
   "browserRequirements": "Requires JavaScript. Requires an Ethereum-compatible browser wallet.",
   "inLanguage": "en",
   "author": {
     "@type": "Person",
-    "name": "Ferit Tunçer",
+    "name": "Ferit Tuncer",
     "url": "https://github.com/0xferit"
   },
   "genre": ["Coordination Game", "Game Theory", "Blockchain Game"],
@@ -67,391 +66,353 @@
 <body>
 <a href="#main-content" class="skip-link">Skip to main content</a>
 
-<nav aria-label="Primary navigation">
-  <div class="logo">Schelling <span>Games</span></div>
-  <a href="/app" class="play-link">Play</a>
+<nav class="site-nav" id="mainNav" aria-label="Primary navigation">
+  <a class="brand" href="/" aria-label="Schelling Games home">
+    <svg class="brand-mark" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <circle cx="24" cy="24" r="17" stroke="currentColor" stroke-width="1.6"/>
+      <circle cx="24" cy="24" r="9.5" stroke="currentColor" stroke-width="1.6" opacity=".72"/>
+      <circle class="brand-mark-dot" cx="30.5" cy="18.5" r="3.8"/>
+      <path d="M24 7V13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity=".55"/>
+      <path d="M41 24H35" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity=".55"/>
+      <path d="M24 41V35" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity=".55"/>
+      <path d="M7 24H13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity=".55"/>
+    </svg>
+    <span class="brand-wordmark">Schelling <span>Games</span></span>
+  </a>
+  <div class="nav-links">
+    <a href="#origin">Origin</a>
+    <a href="#how-it-works">How It Works</a>
+    <a href="#mechanism-context">Context</a>
+    <a href="#try-it">Try It</a>
+    <a href="#theory">Theory</a>
+  </div>
+  <div class="nav-actions">
+    <a href="/app" class="nav-cta">Play</a>
+    <button class="nav-hamburger" id="navHamburger" type="button" aria-expanded="false" aria-controls="navMobile">
+      <span class="sr-only">Toggle navigation</span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </button>
+  </div>
+  <div class="nav-mobile" id="navMobile">
+    <a href="#origin">Origin</a>
+    <a href="#how-it-works">How It Works</a>
+    <a href="#mechanism-context">Context</a>
+    <a href="#try-it">Try It</a>
+    <a href="#theory">Theory</a>
+    <a href="/app" class="nav-mobile-cta">Play Now</a>
+  </div>
 </nav>
 
 <main id="main-content">
-
-<!-- ══ HERO ══════════════════════════════ -->
-<section class="hero">
-  <canvas class="hero-canvas" id="convergence" aria-hidden="true"></canvas>
-  <div class="hero-overtitle hero-anim">A coordination game</div>
-  <h1 class="hero-anim ha-1">Think Like<br/><em>Everyone</em> Else</h1>
-  <p class="hero-sub hero-anim ha-2">
-    No safe collusion. No shortcuts. Just you and a prompt.
-    Pick the answer you think most others will pick.
-  </p>
-  <a href="/app" class="hero-cta hero-anim ha-3">Play Now</a>
-  <div class="hero-wallet-note hero-anim ha-3">Ethereum wallet required &middot; any EIP-1193 wallet works</div>
-  <div class="hero-scroll">
-    <div class="hero-scroll-chevron"></div>
-  </div>
-</section>
-
-<!-- ══ ORIGIN ═══════════════════════════ -->
-<section class="origin">
-  <div class="container origin-container">
-    <div class="origin-year" aria-hidden="true">1960</div>
-    <div class="section-label reveal">The Origin</div>
-    <h2 class="section-title reveal">Thomas Schelling</h2>
-    <p class="origin-body reveal">
-      In 1960, economist Thomas Schelling posed a deceptively simple question:
-      if two strangers had to meet in New York City with no way to communicate,
-      where would they go? Most people said Grand Central Station at noon.
-      He called these natural meeting points <em>focal points</em> and showed that
-      coordination without communication is not only possible, it is predictable.
-      Schelling won the 2005 Nobel Prize in Economics for his work on
-      conflict and cooperation through game-theory analysis.
-      This game is a playable adaptation of that idea, built around a fixed seed set of canonical coordination prompts.
-    </p>
-    <div class="origin-accent reveal"></div>
-  </div>
-</section>
-
-<!-- ══ THEORY (moved before demo) ═══════ -->
-<section class="theory">
-  <div class="container">
-    <div class="section-label reveal">The Concept</div>
-    <h2 class="section-title reveal">Focal Points</h2>
-    <p class="section-body reveal">
-      In 1960, economist Thomas Schelling discovered that people can coordinate
-      without communicating by gravitating toward answers that feel naturally
-      prominent: focal points.
-    </p>
-    <blockquote class="theory-quote reveal">
-      People can often concert their intentions or expectations with
-      others if each knows that the other is trying to do the same.
-    </blockquote>
-    <p class="theory-attrib reveal">Thomas C. Schelling, The Strategy of Conflict (1960)</p>
-  </div>
-</section>
-
-<!-- ══ RULES ═════════════════════════════ -->
-<section class="concept">
-  <div class="container">
-    <div class="section-label reveal">The Rules</div>
-    <h2 class="section-title reveal">What if winning meant<br/>agreeing with strangers?</h2>
-    <p class="section-body reveal">
-      Schelling Games puts you in a room with other players. Everyone sees the same
-      Schelling prompt. Everyone picks an answer alone. Those who converge on the most
-      popular answer bucket split the pot. The rest lose their ante.
-    </p>
-    <div class="concept-grid">
-      <div class="concept-card reveal reveal-delay-1">
-        <div class="num">01</div>
-        <h3>No Safe Collusion</h3>
-        <p>You can talk, but you cannot prove what you will pick. Anyone who tries to coordinate by pre-revealing their choice opens themselves up to betrayal. The mechanism is designed to make focal-point reasoning the most reliable approach.</p>
-      </div>
-      <div class="concept-card reveal reveal-delay-2">
-        <div class="num">02</div>
-        <h3>Commit-Reveal</h3>
-        <p>Answers are cryptographically locked before anyone reveals. You cannot simply wait to see what others chose, then copy them.</p>
-      </div>
-      <div class="concept-card reveal reveal-delay-3">
-        <div class="num">03</div>
-        <h3>Plurality Wins</h3>
-        <p>The most popular answer wins the game. If two answers tie for first, both groups win. Everyone else loses their ante.</p>
-      </div>
-      <div class="concept-card reveal reveal-delay-4">
-        <div class="num">04</div>
-        <h3>10 Games</h3>
-        <p>Each match is 10 games of different prompts. Over many games, consistent coordination is rewarded more than any single lucky guess.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══ MECHANICS ═════════════════════════ -->
-<section class="mechanics">
-  <div class="container">
-    <div class="section-label reveal">How It Works</div>
-    <h2 class="section-title reveal">Commit, reveal, normalize, settle</h2>
-    <div class="mech-steps">
-      <div class="mech-step reveal reveal-delay-1">
-        <span class="icon">I</span>
-        <h3>Commit</h3>
-        <p>Read the prompt, pick your answer, lock it in with a cryptographic hash. <span id="commit-seconds">60</span> seconds. No take-backs.</p>
-      </div>
-      <div class="mech-step reveal reveal-delay-2">
-        <span class="icon">II</span>
-        <h3>Reveal</h3>
-        <p>When commit closes, the reveal window opens. You submit the exact answer and salt behind your commitment so the hash can be verified.</p>
-      </div>
-      <div class="mech-step reveal reveal-delay-3">
-        <span class="icon">III</span>
-        <h3>Normalize</h3>
-        <p>Open-text answers pass through an AI normalization step so equivalent signals such as <em>NYC</em> and <em>New York</em> can land in the same bucket.</p>
-      </div>
-      <div class="mech-step reveal reveal-delay-4">
-        <span class="icon">IV</span>
-        <h3>Settle</h3>
-        <p>The plurality wins. An ante is collected from all players, then redistributed to those who converged. Any indivisible remainder is burned.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══ TRY IT (moved after theory + mechanics) -->
-<section class="example">
-  <div class="container">
-    <div class="example-layout reveal">
-      <div class="example-left">
-        <div class="section-label">Try It</div>
-        <h2 class="section-title">What will the<br/>crowd choose?</h2>
-        <p class="example-insight">
-          100 is the only non-prime, the only round number, and the only three-digit number in the set.
-          When you reason about what others will pick, that salience makes it the natural coordination target: the focal point.
-        </p>
-      </div>
-      <div class="example-demo">
-        <div class="example-question">Pick the number you think most others will pick.</div>
-        <div class="example-vote-status" aria-live="polite"></div>
-        <div class="example-turnstile" id="example-turnstile" hidden></div>
-        <div class="example-options">
-          <button class="example-opt">13</button>
-          <button class="example-opt">7</button>
-          <button class="example-opt">61</button>
-          <button class="example-opt">29</button>
-          <button class="example-opt">41</button>
-          <button class="example-opt">3</button>
-          <button class="example-opt">67</button>
-          <button class="example-opt">19</button>
-          <button class="example-opt popular">100</button>
-          <button class="example-opt">53</button>
-          <button class="example-opt">2</button>
-          <button class="example-opt">37</button>
-          <button class="example-opt">11</button>
-          <button class="example-opt">71</button>
-          <button class="example-opt">43</button>
-          <button class="example-opt">59</button>
-          <button class="example-opt">23</button>
-          <button class="example-opt">47</button>
+  <section class="hero section">
+    <div class="container">
+      <div class="hero-panel reveal">
+        <div class="panel-top">
+          <span>Shared salience</span>
+          <span>Live multiplayer protocol</span>
+          <span>Commit -> Reveal -> Settle</span>
+        </div>
+        <div class="hero-grid">
+          <div class="hero-copy">
+            <p class="eyebrow">Coordination without communication</p>
+            <h1>Schelling <span>Games</span></h1>
+            <p class="hero-summary">Pick what you think everyone else will independently converge on. The answer gets sealed, revealed together, then rewarded by plurality.</p>
+            <div class="hero-actions">
+              <a href="/app" class="hero-cta">Play Now</a>
+              <p class="hero-note">Ethereum wallet required &middot; any crowd from 3 to 21 players</p>
+            </div>
+          </div>
+          <div class="hero-side">
+            <div class="hero-stat">
+              <span class="hero-stat-label">Games Per Match</span>
+              <strong>10</strong>
+              <p>The table resets every round, but the match rewards consistent coordination.</p>
+            </div>
+            <div class="hero-stat">
+              <span class="hero-stat-label">Winning Condition</span>
+              <strong>Plurality</strong>
+              <p>The largest answer cluster wins. Ties split the pot. Cleverness does not beat salience.</p>
+            </div>
+            <div class="hero-tags">
+              <span>Blind commitment</span>
+              <span>No reactive copying</span>
+              <span>Shared intuition wins</span>
+            </div>
+          </div>
+        </div>
+        <div class="hero-footer">
+          <span>Read the table</span>
+          <span>Hide the pick</span>
+          <span>Reveal together</span>
+          <span>Converge</span>
         </div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<!-- ══ LEARN ════════════════════════════ -->
-<section class="learn">
-  <div class="container">
-
-    <!-- What is a Schelling Point? -->
-    <div class="learn-subsection">
-      <div class="section-label reveal">The Theory</div>
-      <h2 class="section-title reveal">What is a Schelling Point?</h2>
-      <p class="section-body reveal">
-        A Schelling point (or focal point) is a solution people naturally converge on
-        without communicating. It works because some answers feel more obvious, more
-        prominent, or more "default" than others.
-      </p>
-      <div class="learn-callout reveal">
-        If two strangers are told to meet somewhere in New York City with no further
-        instructions, most choose Grand Central Station at noon. Nobody told them to.
-        It is simply the most obvious choice.
-        <div class="learn-callout-attrib">
-          Adapted from Thomas Schelling, <em>The Strategy of Conflict</em> (1960)
+  <section class="section" id="origin">
+    <div class="container origin-grid">
+      <div class="origin-stage reveal">
+        <div class="panel-top">
+          <span>New York / 1960</span>
+          <span>The Strategy of Conflict</span>
+          <span>Focal points enter the room</span>
         </div>
+        <div class="origin-year">
+          <span>19</span>
+          <span class="accent">60</span>
+        </div>
+        <p class="origin-stage-copy">Schelling frames coordination as a search for the answer that feels obvious enough to strangers.</p>
       </div>
-      <p class="section-body reveal">
-        Schelling showed experimentally that people succeed at these coordination tasks
-        far more often than chance would predict. The key insight: shared context and
-        cultural salience create natural convergence points.
-      </p>
-    </div>
-
-    <!-- Why Does This Game Work? -->
-    <div class="learn-subsection">
-      <div class="section-label reveal">The Incentives</div>
-      <h2 class="section-title reveal">Why does this mechanism work?</h2>
-      <p class="section-body reveal">
-        Schelling Games turns focal-point theory into a playable incentive structure.
-        Four properties make it robust:
-      </p>
-      <div class="learn-steps">
-        <div class="learn-step reveal reveal-delay-1">
-          <div class="num">01</div>
-          <h3>Plurality Wins</h3>
-          <p>The answer picked by the largest group wins. Ties split the pot. The Nash equilibrium is to pick the most obvious choice, not to be clever or contrarian.</p>
-        </div>
-        <div class="learn-step reveal reveal-delay-2">
-          <div class="num">02</div>
-          <h3>Blind Commitment</h3>
-          <p>Commit-reveal cryptography means you lock your answer before seeing anyone else's. No copying, no last-second switches.</p>
-        </div>
-        <div class="learn-step reveal reveal-delay-3">
-          <div class="num">03</div>
-          <h3>Truth as Equilibrium</h3>
-          <p>When the most obvious answer is always the best strategy, "pick what's salient" becomes the dominant play.</p>
-        </div>
-        <div class="learn-step reveal reveal-delay-4">
-          <div class="num">04</div>
-          <h3>Beyond the Game</h3>
-          <p>This is exactly why the mechanism is useful in the real world: it produces consensus without requiring trust or a central authority.</p>
+      <div class="origin-copy reveal">
+        <span class="section-label">The Origin</span>
+        <h2>Meet Thomas <em>Schelling</em></h2>
+        <p>In 1960, economist Thomas Schelling published <em>The Strategy of Conflict</em>, a landmark study in how people coordinate without explicit communication. He found that, when pushed to guess what others will choose, people drift toward answers that feel prominent or natural. He called these focal points.</p>
+        <p>Schelling Games turns that idea into a live multiplayer format. Every round asks the same question in a harsher environment: can you find the answer that a room of strangers will independently recognize as the coordination target?</p>
+        <div class="info-list">
+          <span>Nobel Prize in Economics, 2005</span>
+          <span>Coordination without communication</span>
+          <span>Shared intuition as game mechanic</span>
         </div>
       </div>
     </div>
+  </section>
 
-    <!-- Real-World Uses -->
-    <div class="learn-subsection">
-      <div class="section-label reveal">Applications</div>
-      <h2 class="section-title reveal">Where Schelling games are used</h2>
-      <div class="learn-apps">
-        <div class="learn-app reveal reveal-delay-1">
-          <div class="learn-app-label">Oracles</div>
-          <h3>Decentralized Price Feeds</h3>
-          <p>Example: a derivatives protocol needs the ETH/USD price at exactly 4:00 PM UTC to settle expiring contracts. Independent reporters submit the price they observed, and the coordinated result becomes the onchain settlement value, as in <a href="https://docs.uma.xyz/protocol-overview/how-does-umas-oracle-work" target="_blank" rel="noopener noreferrer">UMA's oracle and DVM</a>.</p>
+  <section class="section" id="how-it-works">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="section-label">How It Works</span>
+        <h2>The protocol loop</h2>
+        <p>Each game follows the same sealed cycle. Choices are committed before the table can read them, then opened together, then settled by plurality.</p>
+      </div>
+      <div class="phase-grid">
+        <article class="phase-card reveal">
+          <span class="phase-index">01</span>
+          <h3>Commit</h3>
+          <p>Read the prompt, pick your answer, hash it with a salt, and submit. The table can speculate, but it cannot see your actual choice yet.</p>
+          <span class="phase-chip">Blind commitment</span>
+        </article>
+        <article class="phase-card reveal">
+          <span class="phase-index">02</span>
+          <h3>Reveal</h3>
+          <p>When the commit window closes, everyone reveals the answer behind their hash. Select prompts verify exact options and open-text prompts verify canonical buckets.</p>
+          <span class="phase-chip">Shared reveal window</span>
+        </article>
+        <article class="phase-card reveal">
+          <span class="phase-index">03</span>
+          <h3>Settle</h3>
+          <p>The largest matching group wins. Ties split the pot. The mechanism rewards whatever answer a room of strangers can independently recognize as obvious.</p>
+          <span class="phase-chip">Plurality payout</span>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="mechanism-context">
+    <div class="container context-grid">
+      <div class="context-copy reveal">
+        <span class="section-label">Why It Holds</span>
+        <h2>Salience becomes strategy</h2>
+        <p>The mechanism works because every part of the loop points toward the same equilibrium. Plurality rewards convergence, commit-reveal removes reactive copying, and the prompt forces each player to model what the group will find most legible.</p>
+        <div class="context-principles">
+          <div>
+            <strong>Plurality wins</strong>
+            <p>The best move is to identify the answer that feels most shared, not the answer that feels smartest.</p>
+          </div>
+          <div>
+            <strong>Blind commitment</strong>
+            <p>Everyone crosses the same cryptographic boundary before they can inspect the table.</p>
+          </div>
+          <div>
+            <strong>Truth as equilibrium</strong>
+            <p>When the salient answer is also the profitable answer, shared intuition becomes a stable coordination target.</p>
+          </div>
         </div>
-        <div class="learn-app reveal reveal-delay-2">
-          <div class="learn-app-label">Prediction Markets</div>
-          <h3>Outcome Resolution</h3>
-          <p>Example: a market asks whether a merger closed before the deadline. Reporters review the filings, submit yes or no independently, and the majority answer resolves the market without a central judge. This is the same reporting and dispute pattern used by <a href="https://augur.net/learn/fork/disputes-and-bonds/" target="_blank" rel="noopener noreferrer">Augur</a>.</p>
+      </div>
+      <div class="context-side reveal">
+        <div class="context-panel">
+          <div class="panel-top">
+            <span>Ethereum Context</span>
+            <span>2014 / SchellingCoin</span>
+            <span>Mechanism beyond the game</span>
+          </div>
+          <h3>From theory to on-chain mechanism</h3>
+          <p>Vitalik Buterin's early SchellingCoin idea pushed the same incentive shape into blockchain design: reward the report that matches the majority, and honest reporting can become the best strategy available. That logic later shows up in oracle systems, prediction market resolution, dispute systems, and governance coordination.</p>
         </div>
-        <div class="learn-app reveal reveal-delay-3">
-          <div class="learn-app-label">Justice</div>
-          <h3>Decentralized Courts</h3>
-          <p>Example: a freelancer and client dispute whether a milestone was actually delivered. Jurors review the contract, messages, and submitted work in isolation, then vote; jurors who align with the majority are rewarded. <a href="https://docs.kleros.io/products/escrow" target="_blank" rel="noopener noreferrer">Kleros Escrow</a> applies this model to real dispute resolution.</p>
+        <div class="use-case-grid">
+          <article class="use-case">
+            <span>01</span>
+            <h4>Oracles</h4>
+            <p>Decentralized price feeds rely on independent reporters converging on the same truth.</p>
+          </article>
+          <article class="use-case">
+            <span>02</span>
+            <h4>Prediction Markets</h4>
+            <p>Disputed outcomes can resolve through shared reporting instead of a single trusted judge.</p>
+          </article>
+          <article class="use-case">
+            <span>03</span>
+            <h4>Decentralized Courts</h4>
+            <p>Jurors are rewarded for arriving at the same verdict without direct coordination.</p>
+          </article>
+          <article class="use-case">
+            <span>04</span>
+            <h4>Governance</h4>
+            <p>Protocol communities can coordinate around parameters that feel publicly legible and stable.</p>
+          </article>
         </div>
       </div>
     </div>
+  </section>
 
-    <!-- Why It Matters for Ethereum -->
-    <div class="learn-subsection">
-      <div class="section-label reveal">Ethereum Context</div>
-      <h2 class="section-title reveal">From theory to cryptographic mechanism</h2>
-      <div class="learn-ethereum reveal">
-        <p>
-          In 2014, <strong>Vitalik Buterin proposed SchellingCoin</strong>: the first design
-          for using Schelling-point incentives on a blockchain. The idea was simple: if you
-          reward participants for reporting values that match the majority, honest reporting
-          becomes the dominant strategy. This concept underpins oracle designs, curation
-          markets, and governance systems across Ethereum where decentralized truth is needed
-          without a trusted authority.
-        </p>
+  <section class="section" id="try-it">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="section-label">Try It</span>
+        <h2>What will the crowd choose?</h2>
+        <p>One prompt. Eighteen options. The point is not your favorite answer, but the answer you think a room of strangers will independently recognize as the coordination target.</p>
+      </div>
+      <div class="example-shell reveal">
+        <div class="panel-top">
+          <span>Single-prompt coordination puzzle</span>
+          <span>Blind pick</span>
+          <span>Plurality readout</span>
+        </div>
+        <div class="example-main">
+          <div class="example-copy">
+            <div class="example-question">Pick the number you think <em>most others</em> will pick.</div>
+            <div class="example-vote-status" aria-live="polite"></div>
+            <div class="example-turnstile" id="example-turnstile" hidden></div>
+          </div>
+          <div class="example-meta">
+            <p>When a number feels visibly more legible than the rest, it becomes the focal point.</p>
+            <div class="example-meta-list">
+              <span>One obvious outlier</span>
+              <span>No direct signaling</span>
+              <span>Shared salience wins</span>
+            </div>
+          </div>
+        </div>
+        <div class="example-grid" id="exampleGrid">
+          <button class="example-opt"><span class="opt-n">13</span><span class="opt-meta">Prime &middot; Odd</span></button>
+          <button class="example-opt"><span class="opt-n">7</span><span class="opt-meta">Prime &middot; Odd</span></button>
+          <button class="example-opt"><span class="opt-n">61</span><span class="opt-meta">Prime &middot; Odd</span></button>
+          <button class="example-opt"><span class="opt-n">29</span><span class="opt-meta">Prime &middot; Odd</span></button>
+          <button class="example-opt"><span class="opt-n">41</span><span class="opt-meta">Prime &middot; Odd</span></button>
+          <button class="example-opt"><span class="opt-n">3</span><span class="opt-meta">Prime &middot; Odd</span></button>
+          <button class="example-opt"><span class="opt-n">67</span><span class="opt-meta">Prime &middot; Odd</span></button>
+          <button class="example-opt"><span class="opt-n">19</span><span class="opt-meta">Prime &middot; Odd</span></button>
+          <button class="example-opt popular"><span class="opt-n">100</span><span class="opt-meta">Round &middot; Non-prime</span></button>
+          <button class="example-opt"><span class="opt-n">53</span><span class="opt-meta">Prime &middot; Odd</span></button>
+          <button class="example-opt"><span class="opt-n">2</span><span class="opt-meta">Prime &middot; Even</span></button>
+          <button class="example-opt"><span class="opt-n">37</span><span class="opt-meta">Prime &middot; Odd</span></button>
+          <button class="example-opt"><span class="opt-n">11</span><span class="opt-meta">Prime &middot; Odd</span></button>
+          <button class="example-opt"><span class="opt-n">71</span><span class="opt-meta">Prime &middot; Odd</span></button>
+          <button class="example-opt"><span class="opt-n">43</span><span class="opt-meta">Prime &middot; Odd</span></button>
+          <button class="example-opt"><span class="opt-n">59</span><span class="opt-meta">Prime &middot; Odd</span></button>
+          <button class="example-opt"><span class="opt-n">23</span><span class="opt-meta">Prime &middot; Odd</span></button>
+          <button class="example-opt"><span class="opt-n">47</span><span class="opt-meta">Prime &middot; Odd</span></button>
+        </div>
+        <div class="example-insight">
+          <p>100 is the only non-prime, the only round number, and the only three-digit number in the set. That salience makes it the natural coordination target: the focal point.</p>
+          <button class="example-reset" id="exReset" type="button">Try Again</button>
+        </div>
       </div>
     </div>
+  </section>
 
-    <!-- Further Reading -->
-    <details class="learn-reading reveal">
-      <summary>Further Reading</summary>
-      <ul class="learn-reading-list">
-        <li>
-          Thomas Schelling &mdash;
-          <a href="https://en.wikipedia.org/wiki/The_Strategy_of_Conflict" target="_blank" rel="noopener noreferrer"><em>The Strategy of Conflict</em></a>
-          <span class="reading-year">1960</span>
-        </li>
-        <li>
-          Mehta, Starmer &amp; Sugden &mdash;
-          <a href="https://www.jstor.org/stable/2118026" target="_blank" rel="noopener noreferrer">"The Nature of Salience: An Experimental Investigation"</a>
-          <span class="reading-year">1994</span>
-        </li>
-        <li>
-          Roger Myerson &mdash;
-          <a href="https://home.uchicago.edu/~rmyerson/stratofc2010.pdf" target="_blank" rel="noopener noreferrer">"Learning from Schelling's Strategy of Conflict"</a>
-          <span class="reading-year">2009</span>
-        </li>
-        <li>
-          Vitalik Buterin &mdash;
-          <a href="https://blog.ethereum.org/2014/03/28/schellingcoin-a-minimal-trust-universal-data-feed" target="_blank" rel="noopener noreferrer">SchellingCoin</a>
-          <span class="reading-year">2014</span>
-        </li>
-        <li>
-          Paul Sztorc &mdash;
-          <a href="https://www.truthcoin.info/papers/truthcoin-whitepaper.pdf" target="_blank" rel="noopener noreferrer">"Truthcoin" whitepaper</a>
-          <span class="reading-year">2014</span>
-        </li>
-        <li>
-          <a href="https://augur.net" target="_blank" rel="noopener noreferrer">Augur</a>
-          &mdash; Schelling games for prediction markets
-          <span class="reading-year">2015</span>
-        </li>
-        <li>
-          <a href="https://blog.ethereum.org/2015/01/28/p-epsilon-attack" target="_blank" rel="noopener noreferrer">P+&epsilon; Attack</a>
-          &mdash; a known bribery vulnerability in Schelling-point mechanisms
-          <span class="reading-year">2015</span>
-        </li>
-        <li>
-          <a href="https://kleros.io/whitepaper.pdf" target="_blank" rel="noopener noreferrer">Kleros Whitepaper</a>
-          &mdash; commit-reveal voting for decentralized dispute resolution
-          <span class="reading-year">2019</span>
-        </li>
-        <li>
-          <a href="https://docs.uma.xyz" target="_blank" rel="noopener noreferrer">UMA Optimistic Oracle</a>
-          &mdash; Schelling-point dispute resolution in production DeFi
-          <span class="reading-year">2020</span>
-        </li>
-        <li>
-          AI Alignment Forum &mdash;
-          <a href="https://www.alignmentforum.org/posts/n2c62YS8RJtD4Aqhh/schelling-game-evaluations-for-ai-control" target="_blank" rel="noopener noreferrer">"Schelling game evaluations for AI control"</a>
-          <span class="reading-year">2024</span>
-        </li>
-        <li>
-          Aharon et al. &mdash;
-          <a href="https://arxiv.org/abs/2601.22184" target="_blank" rel="noopener noreferrer">"Tacit Coordination of Large Language Models"</a>
-          <span class="reading-year">2026</span>
-        </li>
-      </ul>
-    </details>
-
-  </div>
-</section>
-
-<!-- ══ SOCIAL PROOF ═══════════════════════ -->
-<section class="social-proof">
-  <div class="container">
-    <div class="section-label reveal">Recent Activity</div>
-    <h2 class="section-title reveal">The game is active</h2>
-    <p class="section-body reveal">
-      As few as 3 players can form a match. No need to fill a large lobby.
-    </p>
-    <div class="social-proof-grid">
-      <article class="social-card reveal reveal-delay-1">
-        <div class="social-value" id="stat-players-24h" role="status" aria-live="polite" aria-atomic="true">--</div>
-        <div class="social-label">Players in the last 24h</div>
-        <p class="social-copy">Distinct players who joined a match recently.</p>
-      </article>
-      <article class="social-card reveal reveal-delay-2">
-        <div class="social-value" id="stat-completed-matches" role="status" aria-live="polite" aria-atomic="true">--</div>
-        <div class="social-label">Completed Matches</div>
-        <p class="social-copy">Full matches played and settled so far.</p>
-      </article>
-      <article class="social-card reveal reveal-delay-3">
-        <div class="social-value" id="stat-longest-streak" role="status" aria-live="polite" aria-atomic="true">--</div>
-        <div class="social-label">Best Coordination Streak</div>
-        <p class="social-copy">Consecutive games where the group found the focal point.</p>
-      </article>
+  <section class="section" id="theory">
+    <div class="container theory-grid">
+      <div class="theory-copy reveal">
+        <span class="section-label">The Theory</span>
+        <h2>Why some answers feel <em>inevitable</em></h2>
+        <p>Why do two strangers drift toward Grand Central? Why does the number 100 pull a room of players toward itself? Some answers feel naturally prominent before anyone has spoken. Schelling called these focal points: answers that become coordination anchors because each person expects the others to notice the same thing.</p>
+        <div class="info-list">
+          <span>Salience over originality</span>
+          <span>Mutual expectation over direct planning</span>
+          <span>The crowd converges on what feels obvious</span>
+        </div>
+      </div>
+      <aside class="quote-card reveal">
+        <span class="quote-label">Observed by Schelling</span>
+        <blockquote>People can often concert their intentions or expectations with others if each knows that the other is trying to do the same.</blockquote>
+        <p>Thomas C. Schelling &middot; <em>The Strategy of Conflict</em> &middot; 1960</p>
+      </aside>
     </div>
-    <p class="social-proof-note reveal">Aggregated from public match data.</p>
-  </div>
-</section>
+  </section>
 
-<!-- ══ FINAL CTA ═════════════════════════ -->
-<section class="final-cta">
-  <h2 class="section-title reveal">Ready to find the focal point?</h2>
-  <p class="reveal">Any crowd from 3 to 21 players. 10 games. One prompt: can you think like everyone else?</p>
-  <a href="/app" class="hero-cta reveal">Play Now</a>
-</section>
+  <section class="section" id="activity">
+    <div class="container">
+      <div class="section-head reveal">
+        <span class="section-label">Recent Activity</span>
+        <h2>The game is active</h2>
+        <p>Any crowd from 3 to 21 players can form a match. No need to fill a massive lobby before the coordination problem becomes live.</p>
+      </div>
+      <div class="social-grid">
+        <article class="social-card reveal">
+          <div class="social-value" id="stat-players-24h" role="status" aria-live="polite" aria-atomic="true">--</div>
+          <div class="social-label">Players in the Last 24h</div>
+          <p>Distinct players who joined a public match recently.</p>
+        </article>
+        <article class="social-card reveal">
+          <div class="social-value" id="stat-completed-matches" role="status" aria-live="polite" aria-atomic="true">--</div>
+          <div class="social-label">Completed Matches</div>
+          <p>Full public matches that finished settlement and closed the loop.</p>
+        </article>
+        <article class="social-card reveal">
+          <div class="social-value" id="stat-longest-streak" role="status" aria-live="polite" aria-atomic="true">--</div>
+          <div class="social-label">Best Coordination Streak</div>
+          <p>The strongest run of consecutive coordinated games recorded so far.</p>
+        </article>
+      </div>
+    </div>
+  </section>
 
+  <section class="section final-section">
+    <div class="container">
+      <div class="final-panel reveal">
+        <div class="panel-top">
+          <span>Ready to enter the live coordination field</span>
+          <span>Any crowd from 3 to 21 players</span>
+          <span>10 games per match</span>
+        </div>
+        <div class="final-main">
+          <div>
+            <span class="section-label">Final Call</span>
+            <h2>Ready to find the <em>focal point</em>?</h2>
+          </div>
+          <div class="final-actions">
+            <p>One prompt: can you think like everyone else?</p>
+            <a href="/app" class="hero-cta">Play Now</a>
+          </div>
+        </div>
+        <div class="footer-grid">
+          <div>
+            <div class="footer-brand">Schelling <span>Games</span></div>
+            <p class="footer-copy">A live coordination game about focal points, salience, and reading what a table of strangers will independently converge on.</p>
+          </div>
+          <div class="footer-links">
+            <a href="#origin">Origin</a>
+            <a href="#how-it-works">How It Works</a>
+            <a href="#try-it">Try It</a>
+            <a href="#theory">Theory</a>
+          </div>
+          <div class="footer-links">
+            <a href="/app">Play</a>
+            <a href="https://github.com/0xferit/schelling-games/issues/new?template=feedback.md&labels=feedback&title=%5BFeedback%5D%3A%20" target="_blank" rel="noopener noreferrer">Feedback</a>
+            <a href="https://github.com/0xferit/schelling-games" target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a href="https://github.com/0xferit/schelling-games/blob/main/LICENSE" target="_blank" rel="noopener noreferrer">MIT License</a>
+          </div>
+        </div>
+        <div class="footer-meta">
+          <span class="build-stamp" data-build-hash="__BUILD_HASH__" data-build-date="__BUILD_DATE__">__BUILD_HASH__ &middot; __BUILD_DATE__</span>
+        </div>
+      </div>
+    </div>
+  </section>
 </main>
-
-<footer>
-  <div class="footer-inner">
-    <div>
-      <div class="footer-brand">The Schelling <span>Game</span></div>
-      <div class="footer-desc">A coordination game based on focal point theory</div>
-    </div>
-    <div class="footer-links">
-      <a href="https://github.com/0xferit/schelling-games/issues/new?template=feedback.md&labels=feedback&title=%5BFeedback%5D%3A%20" target="_blank" rel="noopener noreferrer">Feedback</a>
-      <a href="https://github.com/0xferit/schelling-games" target="_blank" rel="noopener">GitHub</a>
-      <a href="https://github.com/0xferit/schelling-games/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a>
-    </div>
-    <div class="footer-meta">
-      <span class="build-stamp" data-build-hash="__BUILD_HASH__" data-build-date="__BUILD_DATE__">__BUILD_HASH__ &middot; __BUILD_DATE__</span>
-    </div>
-  </div>
-</footer>
 
 <script src="/scripts/landing.js"></script>
 </body>

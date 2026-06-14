@@ -10,3 +10,7 @@
 .dialog-title-reset{margin:0}
 .dialog-actions-inline{display:flex;gap:.5rem}
 .rules-example-spaced{margin-bottom:.5rem}
+#build-info{margin-top:auto;text-align:center;padding:2rem 1rem 1rem;font-size:.78rem;color:#555;letter-spacing:.04em;font-family:var(--mono);display:flex;justify-content:center;align-items:center;gap:1rem}
+#app::before{content:'';position:fixed;inset:0;background:linear-gradient(180deg,rgba(230,60,20,.06) 0%,rgba(230,60,20,0) 16%);pointer-events:none;z-index:-1}
+.view.active{animation:viewIn .4s ease forwards}
+@keyframes viewIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}

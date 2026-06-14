@@ -60,7 +60,7 @@
 <script src="https://cdn.jsdelivr.net/npm/ethers@6.16.0/dist/ethers.umd.min.js" integrity="sha384-id0TslbJZjX9r2IGNL8B1MyE0pjkF0h8S+5bc8YV+VE+AQ7N1aOlGKYy+Dy3CD0V" crossorigin="anonymous"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="/styles/tokens.css"/>
 <link rel="stylesheet" href="/styles/base.css"/>
 <link rel="stylesheet" href="/styles/layout.css"/>
@@ -71,10 +71,18 @@
 <div id="app">
   <header>
     <div class="header-brand">
-      <div class="header-brand-copy">
-        <div class="header-kicker">Multiplayer coordination lobby</div>
-        <h1><a href="/" class="header-home-link">Schelling <span>Games</span></a></h1>
-      </div>
+      <a href="/" class="header-home-link" aria-label="Schelling Games">
+        <svg class="brand-mark" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <circle cx="24" cy="24" r="17" stroke="currentColor" stroke-width="1.6"/>
+          <circle cx="24" cy="24" r="9.5" stroke="currentColor" stroke-width="1.6" opacity=".72"/>
+          <circle class="brand-mark-dot" cx="30.5" cy="18.5" r="3.8"/>
+          <path d="M24 7V13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity=".55"/>
+          <path d="M41 24H35" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity=".55"/>
+          <path d="M24 41V35" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity=".55"/>
+          <path d="M7 24H13" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity=".55"/>
+        </svg>
+        <span class="sr-only">Schelling Games</span>
+      </a>
     </div>
     <nav>
       <a class="button-link btn-ghost" id="nav-feedback" href="https://github.com/0xferit/schelling-games/issues/new?template=feedback.md&labels=feedback&title=%5BFeedback%5D%3A%20" target="_blank" rel="noopener noreferrer">Feedback</a>
@@ -90,13 +98,12 @@
       </div>
       <div class="header-actions">
         <button class="btn-ghost" id="manage-name-btn" title="Claim or change display name">Claim Name</button>
-        <button class="btn-ghost hidden" id="backup-seed-btn" title="Export seed phrase">Backup</button>
-        <button class="btn-ghost" id="logout-btn" title="Log out">✕</button>
+        <button class="btn-ghost hidden" id="backup-seed-btn" title="Export seed phrase">Backup Seed</button>
+        <button class="btn-ghost" id="logout-btn" title="Log out">Log Out</button>
       </div>
     </div>
   </header>
 
-  <!-- ── AUTH ──────────────────────────────────────────────────────── -->
   <div id="auth-view" class="view active">
     <div class="card">
       <h2>Sign In</h2>
@@ -125,7 +132,6 @@
     </div>
   </div>
 
-  <!-- ── QUEUE ─────────────────────────────────────────────────────── -->
   <div id="queue-view" class="view">
     <div class="queue-shell">
       <section class="queue-main" aria-labelledby="queue-title">
@@ -185,18 +191,15 @@
     </div>
   </div>
 
-  <!-- ── PLAY ──────────────────────────────────────────────────────── -->
   <div id="play-view" class="view">
     <div id="play-main">
       <div id="phase-announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
-      <!-- Timer -->
       <div class="timer-wrap">
         <div id="phase-timer-label" class="phase-timer-label">Commit</div>
         <div class="timer-bar-outer" id="timer-progress" role="progressbar" aria-labelledby="phase-timer-label" aria-valuemin="0" aria-valuemax="30" aria-valuenow="30" aria-valuetext="30 seconds remaining"><div class="timer-bar timer-bar-fill" id="timer-bar"></div></div>
         <div class="timer-num" id="timer-num">30</div>
       </div>
 
-      <!-- Question -->
       <div id="question-card">
         <div class="question-meta-row">
           <div id="phase-label">Game <span id="game-num">1</span> / 10</div>
@@ -220,7 +223,6 @@
         </div>
       </div>
 
-      <!-- Game result -->
       <div id="game-result-banner" class="hidden">
         <h3>Game <span id="result-game-num">?</span> Result</h3>
         <div id="void-banner" class="void-banner hidden">Game voided: all antes refunded</div>
@@ -239,7 +241,6 @@
       </div>
     </div>
 
-    <!-- Sidebar -->
     <div id="play-sidebar">
       <div id="players-panel">
         <h3>Players</h3>
@@ -261,7 +262,6 @@
     </div>
   </div>
 
-  <!-- ── SUMMARY ───────────────────────────────────────────────────── -->
   <div id="summary-view" class="view">
     <div class="card summary-shell">
       <div id="summary-header">
@@ -276,10 +276,10 @@
         <div class="summary-scoreboard">
           <div class="summary-balance-card">
             <div class="summary-balance-label">Final stack</div>
-            <div id="summary-balance-value">—</div>
+            <div id="summary-balance-value">-</div>
             <div class="summary-balance-meta">
-              <div id="summary-net-pill" class="summary-net-pill">—</div>
-              <div id="summary-starting-balance" class="summary-balance-start">Start —</div>
+              <div id="summary-net-pill" class="summary-net-pill">-</div>
+              <div id="summary-starting-balance" class="summary-balance-start">Start -</div>
             </div>
           </div>
           <div id="summary-rings"></div>
@@ -318,7 +318,6 @@
     </div>
   </div>
 
-  <!-- ── LEADERBOARD ───────────────────────────────────────────────── -->
   <div id="leaderboard-view" class="view">
     <div class="leaderboard-head">
       <div class="leaderboard-head-copy">
